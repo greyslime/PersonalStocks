@@ -1,27 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using System.Net.Http;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.Web.Virtualization;
-using Microsoft.JSInterop;
-using PersonalStocks;
-using PersonalStocks.Shared;
 using PersonalStocks.Data;
-using System.Data;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using ChartJs.Blazor.LineChart;
 using ChartJs.Blazor.Common;
 using ChartJs.Blazor.Util;
 using ChartJs.Blazor.Common.Enums;
 using System.Drawing;
+using ChartJs.Blazor;
 
 namespace PersonalStocks.Pages
 {
@@ -56,11 +40,12 @@ namespace PersonalStocks.Pages
                 }
             };
 
-            var stocks = await service.GetStocks();          
+            var stocks = await service.GetStocks();
 
             foreach (var stock in stocks)
             {
                 var stockMovements = await service.GetMovements(stock);
+                stockMovements = await service.AlignMovements(stockMovements);
 
                 StockDataset dataset = new StockDataset(stock.Name); 
                 if(!_config.Data.XLabels.Contains("Start")) _config.Data.XLabels.Add("Start");
@@ -91,7 +76,9 @@ namespace PersonalStocks.Pages
             BackgroundColor = ColorUtil.FromDrawingColor(randomColor);
             BorderColor = ColorUtil.FromDrawingColor(randomColor);
             Fill = FillingMode.Disabled;
-
+            LineTension = 0;
+            PointStyle = ChartJs.Blazor.Common.Enums.PointStyle.Rect;
+            SpanGaps = false;
         }
     }
 }
