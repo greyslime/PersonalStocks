@@ -50,5 +50,12 @@ namespace PersonalStocks.Data
             }
             catch(Exception ex) { return false; }
         }
+        public async Task<List<Movement>> GetMovements(Stock stock)
+        {
+            if(stock != null)
+                return await _dBContext.Movements.Where(x => x.Stock == stock).ToListAsync();
+            else
+                return await _dBContext.Movements.ToListAsync();
+        }
     }
 }

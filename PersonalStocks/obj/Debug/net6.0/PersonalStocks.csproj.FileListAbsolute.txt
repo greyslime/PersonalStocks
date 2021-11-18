@@ -61,3 +61,5 @@ C:\Users\lalessio\source\repos\PersonalStocks\PersonalStocks\obj\Debug\net6.0\Pe
 C:\Users\lalessio\source\repos\PersonalStocks\PersonalStocks\obj\Debug\net6.0\PersonalStocks.csproj.AssemblyReference.cache
 C:\Users\lalessio\source\repos\PersonalStocks\PersonalStocks\bin\Debug\net6.0\Humanizer.dll
 C:\Users\lalessio\source\repos\PersonalStocks\PersonalStocks\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\lalessio\source\repos\PersonalStocks\PersonalStocks\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\lalessio\source\repos\PersonalStocks\PersonalStocks\bin\Debug\net6.0\ChartJs.Blazor.dll

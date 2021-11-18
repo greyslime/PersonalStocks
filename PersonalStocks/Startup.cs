@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PersonalStocks.Data;
+using Blazorise;
+using Blazorise.Bootstrap5;
 
 public class Startup
 {
@@ -10,8 +12,6 @@ public class Startup
 
     public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
-    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddRazorPages();
@@ -19,9 +19,12 @@ public class Startup
         services.AddTransient<PersonalStocksService>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddDbContext<PersonalStocksContext>(item => item.UseSqlServer(Configuration.GetConnectionString("myconn")));
+        services.AddBlazorise();
+        services.AddServerSideBlazor();
+        services.AddSingleton<IClassProvider, BootstrapClassProvider>();
+        services.AddSingleton<IStyleProvider, Bootstrap5StyleProvider>();
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
@@ -31,7 +34,6 @@ public class Startup
         else
         {
             app.UseExceptionHandler("/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
 
