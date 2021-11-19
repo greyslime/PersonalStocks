@@ -5,14 +5,13 @@ using ChartJs.Blazor.Common;
 using ChartJs.Blazor.Util;
 using ChartJs.Blazor.Common.Enums;
 using System.Drawing;
-using ChartJs.Blazor;
 
 namespace PersonalStocks.Pages
 {
     public partial class Index
     {
         [Inject]
-        private PersonalStocksService service { get; set; }
+        private PersonalStocksService Service { get; set; }
         private LineConfig _config;
 
         protected override async Task OnInitializedAsync()
@@ -40,26 +39,24 @@ namespace PersonalStocks.Pages
                 }
             };
 
-            var stocks = await service.GetStocks();
+            var stocks = await Service.GetStocks();
 
             foreach (var stock in stocks)
             {
-                var stockMovements = await service.GetMovements(stock);
-                stockMovements = await service.AlignMovements(stockMovements);
+                await Service.AlignMovementsOfStock(stock);
 
-                StockDataset dataset = new StockDataset(stock.Name); 
+                StockDataset dataset = new(stock.Name); 
                 if(!_config.Data.XLabels.Contains("Start")) _config.Data.XLabels.Add("Start");
-
+                stock.CurrentValue = stock.StartingValue;
                 dataset.Add(stock.StartingValue);
-                foreach (var m in stockMovements)
+
+                foreach (var m in await Service.GetMovements(stock))
                 {
                     if (!_config.Data.XLabels.Contains(m.Date.ToShortDateString())) _config.Data.XLabels.Add(m.Date.ToShortDateString());
-                    if(m.Unit == "%")
-                        m.Stock.CurrentValue += m.Stock.CurrentValue * m.Value / 100;
-                    else
-                        m.Stock.CurrentValue += m.Value;
-                    dataset.Add(m.Stock.CurrentValue);
+                        stock.ApplyMovement(m);
+                    dataset.Add(stock.CurrentValue);
                 }
+
                 _config.Data.Datasets.Add(dataset);
             }
         }
@@ -69,7 +66,7 @@ namespace PersonalStocks.Pages
     {
         public StockDataset(string name)
         {
-            Random random = new Random();
+            Random random = new();
             Color randomColor = Color.FromArgb((byte)random.Next(0, 255), (byte)random.Next(0, 255), (byte)random.Next(0, 255));
 
             Label = name;
